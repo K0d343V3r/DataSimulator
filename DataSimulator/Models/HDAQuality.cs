@@ -13,6 +13,7 @@ namespace DataServices.Models
         Raw,
         Calculated,
         NoBound,
+        NoData,
         DataLost,
         Conversion,
         Partial

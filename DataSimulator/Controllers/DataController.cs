@@ -30,7 +30,7 @@ namespace DataServices.Controllers
                 var values = new TagValues { Tag = id };
                 var generator = CreateGenerator(id);
                 IList<VQT> rawValues = generator.GetValues(timePeriod, request.InitialValue);
-                if (rawValues.Count > request.MaxCount)
+                if (request.MaxCount > 0 && rawValues.Count > request.MaxCount)
                 {
                     values.Values = DataAggregator.InterpolateValues(rawValues, timePeriod, request.MaxCount);
                 }

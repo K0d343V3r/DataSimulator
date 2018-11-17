@@ -20,7 +20,7 @@ namespace DataServices.Helpers
                 long stepTicks = (timePeriod.EndTime - timePeriod.StartTime).Ticks / count;
                 int rawIndex = 0;
                 DateTime fencePost = timePeriod.StartTime;
-                while (fencePost <= timePeriod.EndTime)
+                while (fencePost < timePeriod.EndTime)
                 {
                     while (rawIndex < rawValues.Count && rawValues[rawIndex].Time < fencePost)
                     {
@@ -44,9 +44,11 @@ namespace DataServices.Helpers
             }
         }
 
-        private static VQT CreateInterpolatedValue(VQT vtq, DateTime time)
+        private static VQT CreateInterpolatedValue(VQT vqt, DateTime time)
         {
-            return new VQT(vtq.Value, time, new Quality() { HDAQuality = HDAQuality.Interpolated });
+            // preserve original major quality
+            Quality quality = new Quality() { Major = vqt.Quality.Major, HDAQuality = HDAQuality.Interpolated };
+            return new VQT(vqt.Value, time, quality);
         }
     }
 }

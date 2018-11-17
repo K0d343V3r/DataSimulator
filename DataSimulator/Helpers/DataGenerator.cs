@@ -10,32 +10,38 @@ namespace DataServices.Helpers
     {
         public IList<VQT> GetValues(TimePeriod timePeriod, InitialValue initialValue)
         {
-            List<VQT> vtqs = new List<VQT>();
+            List<VQT> vqts = new List<VQT>();
 
             // add value at start
             if (timePeriod.StartTime.Millisecond == 0)
             {
                 // start at whole second, generate raw value at start
-                vtqs.Add(new VQT(GetValueAtTime(timePeriod.StartTime), timePeriod.StartTime, new Quality()));
+                vqts.Add(new VQT(GetValueAtTime(timePeriod.StartTime), timePeriod.StartTime, new Quality()));
             }
-            else if (initialValue != InitialValue.None)
+            else if (initialValue == InitialValue.None)
+            {
+                // create bad quality data point at start
+                Quality quality = new Quality() { Major = MajorQuality.Bad, HDAQuality = HDAQuality.NoData };
+                vqts.Add(new VQT(null, timePeriod.StartTime, quality));
+            }
+            else
             {
                 // value at start requested, interpolate one
-                vtqs.Add(CreateInterpolatedValue(timePeriod.StartTime, initialValue == InitialValue.SampleAndHold));
+                vqts.Add(CreateInterpolatedValue(timePeriod.StartTime, initialValue == InitialValue.SampleAndHold));
             }
 
             // next value should be at the next full second
             DateTime startTime = timePeriod.StartTime.AddMilliseconds(1000 - timePeriod.StartTime.Millisecond);
-            while (startTime <= timePeriod.EndTime)
+            while (startTime < timePeriod.EndTime)
             {
                 // all generated values are Good/Raw
-                vtqs.Add(new VQT(GetValueAtTime(startTime), startTime, new Quality()));
+                vqts.Add(new VQT(GetValueAtTime(startTime), startTime, new Quality()));
 
                 // generate a value every second
-                startTime.AddSeconds(1);
+                startTime = startTime.AddSeconds(1);
             }
 
-            return vtqs;
+            return vqts;
         }
 
         private VQT CreateInterpolatedValue(DateTime startTime, bool sampleAndHold)
@@ -54,7 +60,7 @@ namespace DataServices.Helpers
                 float afterValue = (float)GetValueAtTime(afterTime);
 
                 // calculate value at start based on value/time ratio
-                valueAtStart = (startTime - beforeTime).Milliseconds * (afterValue - beforeValue) / 1000;
+                valueAtStart = beforeValue + (afterTime - startTime).Milliseconds * (afterValue - beforeValue) / 1000;
             }
 
             return new VQT(valueAtStart, startTime, new Quality() { HDAQuality = HDAQuality.Interpolated });
