@@ -1,10 +1,10 @@
-﻿using DataServices.Models;
+﻿using DataSimulator.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataServices.Helpers
+namespace DataSimulator.Helpers
 {
     public class WaveFormGenerator : DataGenerator
     {
@@ -20,7 +20,12 @@ namespace DataServices.Helpers
 
         protected override object GetValueAtTime(DateTime date)
         {
-            return GetValueAt(date.Ticks / TimeSpan.TicksPerSecond);
+            return GetValue(date);
+        }
+
+        internal float GetValue(DateTime date)
+        {
+            return GetValue(date, 60);
         }
 
         // Adapted from:
@@ -28,10 +33,9 @@ namespace DataServices.Helpers
         // References:
         // http://en.wikipedia.org/wiki/Waveform
         // http://en.wikipedia.org/wiki/White_noise
-        private float GetValueAt(double time)
+        internal float GetValue(DateTime date, int secondsPerCycle)
         {
-            // one full cyle per minute (1/60 seconds)
-            double t = (1f / 60f) * time;
+            double t = (1f / secondsPerCycle) * (double)(date.Ticks / TimeSpan.TicksPerSecond);
             double value = 0f;
             switch (_waveForm)
             {

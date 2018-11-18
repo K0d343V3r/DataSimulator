@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DataServices.Helpers;
-using DataServices.Models;
+using DataSimulator.Helpers;
+using DataSimulator.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataServices.Controllers
+namespace DataSimulator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -53,8 +53,20 @@ namespace DataServices.Controllers
                 case TagId.NumericSquare:
                 case TagId.NumericTriangle:
                 case TagId.NumericWhiteNoise:
-                    NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
-                    return new WaveFormGenerator(GetWaveForm(tag), scale);
+                    {
+                        NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
+                        return new WaveFormGenerator(GetWaveForm(tag), scale);
+                    }
+
+                case TagId.NumericCount:
+                    {
+                        NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
+                        return new CountGenerator(scale);
+                    }
+
+                case TagId.DiscreteModulated:
+                case TagId.DiscretePeriodic:
+                    return new DiscreteGenerator(tag == TagId.DiscretePeriodic);
 
                 default:
                     throw new InvalidOperationException("Invalid tag id.");

@@ -1,10 +1,10 @@
-﻿using DataServices.Models;
+﻿using DataSimulator.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataServices.Helpers
+namespace DataSimulator.Helpers
 {
     public abstract class DataGenerator
     {

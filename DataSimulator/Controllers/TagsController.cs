@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using DataServices.Helpers;
-using DataServices.Models;
+using DataSimulator.Helpers;
+using DataSimulator.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DataServices.Controllers
+namespace DataSimulator.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

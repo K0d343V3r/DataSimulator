@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataServices.Models
+namespace DataSimulator.Models
 {
     public enum TagId
     {
@@ -12,8 +12,9 @@ namespace DataServices.Models
         NumericSquare,
         NumericSawtooth,
         NumericWhiteNoise,
-        //NumericCount,
-        //Boolean,
+        NumericCount,
+        DiscretePeriodic,
+        DiscreteModulated,
         //String
     }
 }

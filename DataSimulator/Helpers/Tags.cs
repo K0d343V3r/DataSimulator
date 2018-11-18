@@ -1,10 +1,10 @@
-﻿using DataServices.Models;
+﻿using DataSimulator.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataServices.Helpers
+namespace DataSimulator.Helpers
 {
     public static class Tags
     {
@@ -43,6 +43,24 @@ namespace DataServices.Helpers
                     Id = TagId.NumericWhiteNoise,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "W"
+                },
+                new Tag()
+                {
+                    Id = TagId.NumericCount,
+                    Scale = new NumericScale(0, 1000),
+                    EngineeringUnits = "kg"
+                },
+                new Tag()
+                {
+                    Id = TagId.DiscretePeriodic,
+                    TrueLabel = "On",
+                    FalseLabel = "Off"
+                },
+                new Tag()
+                {
+                    Id = TagId.DiscreteModulated,
+                    TrueLabel = "Yes",
+                    FalseLabel = "No"
                 }
             };
 
