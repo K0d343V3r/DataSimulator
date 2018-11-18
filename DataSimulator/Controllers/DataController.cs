@@ -68,6 +68,9 @@ namespace DataSimulator.Controllers
                 case TagId.DiscretePeriodic:
                     return new DiscreteGenerator(tag == TagId.DiscretePeriodic);
 
+                case TagId.Text:
+                    return new TextGenerator();
+
                 default:
                     throw new InvalidOperationException("Invalid tag id.");
             }

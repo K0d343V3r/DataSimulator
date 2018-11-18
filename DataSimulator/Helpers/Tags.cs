@@ -61,6 +61,10 @@ namespace DataSimulator.Helpers
                     Id = TagId.DiscreteModulated,
                     TrueLabel = "Yes",
                     FalseLabel = "No"
+                },
+                new Tag()
+                {
+                    Id = TagId.Text,
                 }
             };
 

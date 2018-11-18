@@ -53,35 +53,34 @@ namespace DataSimulator.Helpers
 
         private DateTime GetOffsetDate(DateTime now, TimeScale scale, int offsetFromNow)
         {
-            DateTime date;
+            long ticks;
             switch (scale)
             {
                 case TimeScale.Days:
-                    date = new DateTime(now.Year, now.Month, now.Day + offsetFromNow, now.Hour, now.Minute, now.Second, now.Millisecond);
+                    ticks = offsetFromNow * TimeSpan.TicksPerDay;
                     break;
 
                 case TimeScale.Hours:
-                    date = new DateTime(now.Year, now.Month, now.Day, now.Hour + offsetFromNow, now.Minute, now.Second, now.Millisecond);
+                    ticks = offsetFromNow * TimeSpan.TicksPerHour;
                     break;
 
                 case TimeScale.Milliseconds:
-                    date = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, now.Millisecond + offsetFromNow);
+                    ticks = offsetFromNow * TimeSpan.TicksPerMillisecond;
                     break;
 
                 case TimeScale.Minutes:
-                    date = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute + offsetFromNow, now.Second, now.Millisecond);
+                    ticks = offsetFromNow * TimeSpan.TicksPerMinute;
                     break;
 
                 case TimeScale.Seconds:
-                    date = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second + offsetFromNow, now.Millisecond);
+                    ticks = offsetFromNow * TimeSpan.TicksPerSecond;
                     break;
 
                 default:
                     throw new InvalidOperationException("Invalid time scale.");
             }
 
-            DateTime.SpecifyKind(date, DateTimeKind.Utc);
-            return date;
+            return now.AddTicks(ticks);
         }
     }
 }

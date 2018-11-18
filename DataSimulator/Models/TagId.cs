@@ -15,6 +15,6 @@ namespace DataSimulator.Models
         NumericCount,
         DiscretePeriodic,
         DiscreteModulated,
-        //String
+        Text
     }
 }
