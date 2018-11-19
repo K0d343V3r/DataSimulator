@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,9 @@ namespace DataSimulator
                     // work with UTC dates
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 });
+
+            // Add OpenAPI/Swagger document
+            services.AddSwaggerDocument(); // registers a Swagger v2.0 document with the name "v1" (default)
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +53,10 @@ namespace DataSimulator
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            // Add OpenAPI/Swagger middlewares
+            app.UseSwagger(); // Serves the registered OpenAPI/Swagger documents by default on `/swagger/{documentName}/swagger.json`
+            app.UseSwaggerUi3(); // Serves the Swagger UI 3 web ui to view the OpenAPI/Swagger documents by default on `/swagger`
         }
     }
 }
