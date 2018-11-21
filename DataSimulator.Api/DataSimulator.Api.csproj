@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyName>DataSimulator</AssemblyName>
-    <RootNamespace>DataSimulator</RootNamespace>
+    <AssemblyName>DataSimulator.Api</AssemblyName>
+    <RootNamespace>DataSimulator.Api</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

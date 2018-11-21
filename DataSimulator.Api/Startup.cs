@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace DataSimulator
+namespace DataSimulator.Api
 {
     public class Startup
     {

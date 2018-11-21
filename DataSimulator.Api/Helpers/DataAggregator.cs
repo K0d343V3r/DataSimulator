@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataSimulator.Models;
+using DataSimulator.Api.Models;
 
-namespace DataSimulator.Helpers
+namespace DataSimulator.Api.Helpers
 {
     public static class DataAggregator
     {

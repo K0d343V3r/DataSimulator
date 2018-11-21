@@ -1,10 +1,10 @@
-﻿using DataSimulator.Models;
+﻿using DataSimulator.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataSimulator.Helpers
+namespace DataSimulator.Api.Helpers
 {
     public static class Tags
     {
