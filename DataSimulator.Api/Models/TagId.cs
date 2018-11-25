@@ -7,14 +7,14 @@ namespace DataSimulator.Api.Models
 {
     public enum TagId
     {
-        NumericSine,
-        NumericTriangle,
-        NumericSquare,
-        NumericSawtooth,
-        NumericWhiteNoise,
-        NumericCount,
-        DiscretePeriodic,
-        DiscreteModulated,
-        Text
+        SineWave,
+        TriangleWave,
+        SquareWave,
+        SawtoothWave,
+        WhiteNoise,
+        IncrementalCount,
+        PeriodicPulse,
+        ModulatedPulse,
+        TimeText
     }
 }

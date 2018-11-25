@@ -8,63 +8,81 @@ namespace DataSimulator.Api.Helpers
 {
     public static class Tags
     {
-        public static readonly IEnumerable<Tag> List;
+        public static readonly IEnumerable<SimulatorTag> List;
 
         static Tags()
         {
-            List<Tag> tags = new List<Tag>
+            List<SimulatorTag> tags = new List<SimulatorTag>
             {
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.NumericSawtooth,
-                    Scale = new NumericScale(0, 100),
-                    EngineeringUnits = "m"
-                },
-                new Tag()
-                {
-                    Id = TagId.NumericSine,
+                    Id = TagId.SineWave,
+                    Name = "Sine Wave",
+                    Type = TagType.Number,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "km"
                 },
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.NumericSquare,
-                    Scale = new NumericScale(0, 100),
-                    EngineeringUnits = "m/s"
-                },
-                new Tag()
-                {
-                    Id = TagId.NumericTriangle,
+                    Id = TagId.TriangleWave,
+                    Name = "Triangle Wave",
+                    Type = TagType.Number,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "ft/s"
                 },
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.NumericWhiteNoise,
+                    Id = TagId.SquareWave,
+                    Name = "Square Wave",
+                    Type = TagType.Number,
+                    Scale = new NumericScale(0, 100),
+                    EngineeringUnits = "m/s"
+                },
+                new SimulatorTag()
+                {
+                    Id = TagId.SawtoothWave,
+                    Name = "Sawtooth Wave",
+                    Type = TagType.Number,
+                    Scale = new NumericScale(0, 100),
+                    EngineeringUnits = "m"
+                },
+                new SimulatorTag()
+                {
+                    Id = TagId.WhiteNoise,
+                    Name = "White Noise",
+                    Type = TagType.Number,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "W"
                 },
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.NumericCount,
+                    Id = TagId.IncrementalCount,
+                    Name = "Incremental Count",
+                    Type = TagType.Number,
                     Scale = new NumericScale(0, 1000),
                     EngineeringUnits = "kg"
                 },
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.DiscretePeriodic,
+                    Id = TagId.PeriodicPulse,
+                    Name = "Periodic Pulse",
+                    Type = TagType.Boolean,
                     TrueLabel = "On",
                     FalseLabel = "Off"
                 },
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.DiscreteModulated,
+                    Id = TagId.ModulatedPulse,
+                    Name = "Modulated Pulse",
+                    Type = TagType.Boolean,
                     TrueLabel = "Yes",
                     FalseLabel = "No"
                 },
-                new Tag()
+                new SimulatorTag()
                 {
-                    Id = TagId.Text,
+                    Id = TagId.TimeText,
+                    Name = "Time Text",
+                    Type = TagType.String
                 }
             };
 

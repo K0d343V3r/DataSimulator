@@ -48,27 +48,27 @@ namespace DataSimulator.Api.Controllers
         {
             switch (tag)
             {
-                case TagId.NumericSawtooth:
-                case TagId.NumericSine:
-                case TagId.NumericSquare:
-                case TagId.NumericTriangle:
-                case TagId.NumericWhiteNoise:
+                case TagId.SawtoothWave:
+                case TagId.SineWave:
+                case TagId.SquareWave:
+                case TagId.TriangleWave:
+                case TagId.WhiteNoise:
                     {
                         NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
                         return new WaveFormGenerator(GetWaveForm(tag), scale);
                     }
 
-                case TagId.NumericCount:
+                case TagId.IncrementalCount:
                     {
                         NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
                         return new CountGenerator(scale);
                     }
 
-                case TagId.DiscreteModulated:
-                case TagId.DiscretePeriodic:
-                    return new DiscreteGenerator(tag == TagId.DiscretePeriodic);
+                case TagId.ModulatedPulse:
+                case TagId.PeriodicPulse:
+                    return new DiscreteGenerator(tag == TagId.PeriodicPulse);
 
-                case TagId.Text:
+                case TagId.TimeText:
                     return new TextGenerator();
 
                 default:
@@ -80,19 +80,19 @@ namespace DataSimulator.Api.Controllers
         {
             switch (id)
             {
-                case TagId.NumericSawtooth:
+                case TagId.SawtoothWave:
                     return WaveForm.Sawtooth;
 
-                case TagId.NumericSine:
+                case TagId.SineWave:
                     return WaveForm.Sine;
 
-                case TagId.NumericSquare:
+                case TagId.SquareWave:
                     return WaveForm.Square;
 
-                case TagId.NumericTriangle:
+                case TagId.TriangleWave:
                     return WaveForm.Triangle;
 
-                case TagId.NumericWhiteNoise:
+                case TagId.WhiteNoise:
                     return WaveForm.WhiteNoise;
 
                 default:
