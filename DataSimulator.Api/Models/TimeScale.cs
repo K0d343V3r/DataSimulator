@@ -7,7 +7,6 @@ namespace DataSimulator.Api.Models
 {
     public enum TimeScale
     {
-        Milliseconds,
         Seconds,
         Minutes,
         Hours,

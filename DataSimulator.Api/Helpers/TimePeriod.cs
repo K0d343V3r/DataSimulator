@@ -64,10 +64,6 @@ namespace DataSimulator.Api.Helpers
                     ticks = offsetFromNow * TimeSpan.TicksPerHour;
                     break;
 
-                case TimeScale.Milliseconds:
-                    ticks = offsetFromNow * TimeSpan.TicksPerMillisecond;
-                    break;
-
                 case TimeScale.Minutes:
                     ticks = offsetFromNow * TimeSpan.TicksPerMinute;
                     break;

@@ -75,8 +75,8 @@ namespace DataSimulator.Api.Helpers
                     Id = TagId.ModulatedPulse,
                     Name = "Modulated Pulse",
                     Type = TagType.Boolean,
-                    TrueLabel = "Yes",
-                    FalseLabel = "No"
+                    TrueLabel = "Opened",
+                    FalseLabel = "Closed"
                 },
                 new SimulatorTag()
                 {
