@@ -101,11 +101,16 @@ namespace DataSimulator.Api.Controllers
         }
 
         [HttpPost("history/relative")]
-        [ProducesResponseType(typeof(IEnumerable<TagValues>), (int)HttpStatusCode.OK)]
-        public ActionResult<IEnumerable<TagValues>> GetHistoryRelative([FromBody] RelativeHistoryRequest request)
+        [ProducesResponseType(typeof(RelativeHistoryResponse), (int)HttpStatusCode.OK)]
+        public ActionResult<RelativeHistoryResponse> GetHistoryRelative([FromBody] RelativeHistoryRequest request)
         {
             TimePeriod timePeriod = new TimePeriod(request.TimeScale, request.OffsetFromNow);
-            return GetHistory(timePeriod, request as HistoryRequestBase);
+            return new RelativeHistoryResponse()
+            {
+                ResolvedStartTime = timePeriod.StartTime,
+                ResolvedEndTime = timePeriod.EndTime,
+                Values = GetHistory(timePeriod, request as HistoryRequestBase)
+            };
         }
 
         [HttpPost("valueattime")]
