@@ -51,6 +51,22 @@ namespace DataSimulator.Api.Helpers
             }
         }
 
+        public TimePeriod(DateTime anchorTime)
+        {
+            DateTime now = DateTime.UtcNow;
+            DateTime utcAnchorTime = anchorTime.ToUniversalTime();
+            if (anchorTime <= now)
+            {
+                StartTime = anchorTime;
+                EndTime = now;
+            }
+            else
+            {
+                StartTime = now;
+                EndTime = utcAnchorTime;
+            }
+        }
+
         private DateTime GetOffsetDate(DateTime now, TimeScale scale, int offsetFromNow)
         {
             long ticks;

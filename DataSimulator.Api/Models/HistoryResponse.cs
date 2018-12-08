@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace DataSimulator.Api.Models
 {
-    public class RelativeHistoryResponse
+    public class HistoryResponse
     {
-        public DateTime ResolvedStartTime;
-        public DateTime ResolvedEndTime;
+        public DateTime StartTime;
+        public DateTime EndTime;
         public IEnumerable<TagValues> Values;
     }
 }

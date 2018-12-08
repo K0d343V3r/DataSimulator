@@ -18,7 +18,7 @@ namespace DataSimulator.Api.Helpers
         protected override object GetValueAtTime(DateTime time)
         {
             // return 1 value per second
-            return _scale.Min + (time.Ticks / TimeSpan.TicksPerSecond) % (_scale.Max - _scale.Min);
+            return _scale.Min + (int)((time.Ticks / TimeSpan.TicksPerSecond) % (_scale.Max - _scale.Min));
         }
     }
 }

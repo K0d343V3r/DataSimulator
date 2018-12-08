@@ -15,33 +15,30 @@ namespace DataSimulator.Api.Controllers
     public class DataController : ControllerBase
     {
         [HttpPost("history/absolute")]
-        [ProducesResponseType(typeof(IEnumerable<TagValues>), (int)HttpStatusCode.OK)]
-        public ActionResult<IEnumerable<TagValues>> GetHistoryAbsolute([FromBody] AbsoluteHistoryRequest options)
+        [ProducesResponseType(typeof(HistoryResponse), (int)HttpStatusCode.OK)]
+        public ActionResult<HistoryResponse> GetHistoryAbsolute([FromBody] AbsoluteHistoryRequest options)
         {
             TimePeriod timePeriod = new TimePeriod(options.StartTime, options.EndTime);
             return GetHistory(timePeriod, options as HistoryRequestBase);
         }
 
-        private List<TagValues> GetHistory(TimePeriod timePeriod, HistoryRequestBase request)
+        private HistoryResponse GetHistory(TimePeriod timePeriod, HistoryRequestBase request)
         {
             List<TagValues> results = new List<TagValues>();
             foreach (var id in request.Tags)
             {
                 var values = new TagValues { Tag = id };
                 var generator = CreateGenerator(id);
-                IList<VQT> rawValues = generator.GetValues(timePeriod, request.InitialValue);
-                if (request.MaxCount > 0 && rawValues.Count > request.MaxCount)
-                {
-                    values.Values = DataAggregator.InterpolateValues(rawValues, timePeriod, request.MaxCount);
-                }
-                else
-                {
-                    values.Values = rawValues;
-                }
+                values.Values = generator.GetValues(timePeriod, request.InitialValue, request.MaxCount);
                 results.Add(values);
             }
 
-            return results;
+            return new HistoryResponse()
+            {
+                StartTime = timePeriod.StartTime,
+                EndTime = timePeriod.EndTime,
+                Values = results
+            };
         }
 
         private DataGenerator CreateGenerator(TagId tag)
@@ -101,16 +98,13 @@ namespace DataSimulator.Api.Controllers
         }
 
         [HttpPost("history/relative")]
-        [ProducesResponseType(typeof(RelativeHistoryResponse), (int)HttpStatusCode.OK)]
-        public ActionResult<RelativeHistoryResponse> GetHistoryRelative([FromBody] RelativeHistoryRequest request)
+        [ProducesResponseType(typeof(HistoryResponse), (int)HttpStatusCode.OK)]
+        public ActionResult<HistoryResponse> GetHistoryRelative([FromBody] RelativeHistoryRequest request)
         {
-            TimePeriod timePeriod = new TimePeriod(request.TimeScale, request.OffsetFromNow);
-            return new RelativeHistoryResponse()
-            {
-                ResolvedStartTime = timePeriod.StartTime,
-                ResolvedEndTime = timePeriod.EndTime,
-                Values = GetHistory(timePeriod, request as HistoryRequestBase)
-            };
+            TimePeriod timePeriod = request.AnchorTime.HasValue ?
+                new TimePeriod(request.AnchorTime.Value) :
+                new TimePeriod(request.TimeScale, request.OffsetFromNow);
+            return GetHistory(timePeriod, request as HistoryRequestBase);
         }
 
         [HttpPost("valueattime")]

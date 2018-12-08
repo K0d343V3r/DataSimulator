@@ -8,49 +8,90 @@ namespace DataSimulator.Api.Helpers
 {
     public abstract class DataGenerator
     {
-        public IList<VQT> GetValues(TimePeriod timePeriod, InitialValue initialValue)
+        public IList<VQT> GetValues(TimePeriod timePeriod, InitialValue initialValue, int maxCount)
         {
-            List<VQT> vqts = new List<VQT>();
+            var vqts = new List<VQT>();
 
-            // add value at start
+            // get projected value count
+            int projectedCount = CalculateProjectedCount(timePeriod, initialValue);
+
+            // add initial value
             if (timePeriod.StartTime.Ticks % TimeSpan.TicksPerSecond == 0)
             {
-                // start is at whole second, generate raw value at start
+                // start time is at whole second, generate Good/Raw value at this time
                 vqts.Add(new VQT(GetValueAtTime(timePeriod.StartTime), timePeriod.StartTime, new Quality()));
             }
-            else if (initialValue == InitialValue.None)
+            else if (initialValue != InitialValue.None || (maxCount > 0 && projectedCount > maxCount))
             {
-                // create bad quality data point at start
-                Quality quality = new Quality() { Major = MajorQuality.Bad, HDAQuality = HDAQuality.NoData };
-                vqts.Add(new VQT(null, timePeriod.StartTime, quality));
-            }
-            else
-            {
-                // value at start requested, interpolate one
+                // initial value requested, or we have too many items, which require a value at start anyway
                 vqts.Add(CreateInterpolatedValue(timePeriod.StartTime, initialValue == InitialValue.SampleAndHold));
             }
 
-            // next value should be at the next full second (remove milliseconds)
-            DateTime nextTime = timePeriod.StartTime.AddTicks(-(timePeriod.StartTime.Ticks % TimeSpan.TicksPerSecond));
-            nextTime = nextTime.AddSeconds(1);
-            while (nextTime < timePeriod.EndTime)
+            // add subsequent values
+            DateTime startTime;
+            long stepTicks;
+            if (maxCount == 0 || projectedCount <= maxCount)
             {
-                // all generated values are Good/Raw
-                vqts.Add(new VQT(GetValueAtTime(nextTime), nextTime, new Quality()));
+                long fractionTicks = timePeriod.StartTime.Ticks % TimeSpan.TicksPerSecond;
 
-                // generate a value every second
-                nextTime = nextTime.AddSeconds(1);
+                // we start at first whole second
+                startTime = timePeriod.StartTime.AddTicks(TimeSpan.TicksPerSecond - fractionTicks);
+
+                // and generate one value per second
+                stepTicks = TimeSpan.TicksPerSecond;
+            }
+            else
+            {
+                // generate exactly maxCount values
+                stepTicks = (timePeriod.EndTime - timePeriod.StartTime).Ticks / maxCount;
+
+                // skip value at start if we already have one
+                startTime = vqts.Count > 0 ? timePeriod.StartTime.AddTicks(stepTicks) : timePeriod.StartTime;
+            }
+
+            while (startTime < timePeriod.EndTime)
+            {
+                Quality quality;
+                if (startTime.Ticks % TimeSpan.TicksPerSecond == 0)
+                {
+                    // we happen to be at a whole second, mark this as Good/Raw
+                    quality = new Quality();
+                }
+                else
+                {
+                    // not at a whole second, mark this as Good/Interpolated
+                    quality = new Quality() { HDAQuality = HDAQuality.Interpolated };
+                }
+
+                // add generated value
+                vqts.Add(new VQT(GetValueAtTime(startTime), startTime, quality));
+
+                // and advance to next time
+                startTime = startTime.AddTicks(stepTicks);
             }
 
             return vqts;
         }
 
+        private int CalculateProjectedCount(TimePeriod timePeriod, InitialValue initialValue)
+        {
+            TimeSpan span = timePeriod.EndTime - timePeriod.StartTime;
+            int count = (int)(span.Ticks / TimeSpan.TicksPerSecond);
+            if (timePeriod.StartTime.Ticks % TimeSpan.TicksPerSecond > 0 && initialValue != InitialValue.None)
+            {
+                // start is at fraction of a second, add one if initial value requested
+                count++;
+            }
+
+            return count;
+        }
+
         private VQT CreateInterpolatedValue(DateTime startTime, bool sampleAndHold)
         {
             DateTime beforeTime = startTime.AddTicks(-(startTime.Ticks % TimeSpan.TicksPerSecond));
-            float beforeValue = (float)GetValueAtTime(beforeTime);
-            float valueAtStart;
-            if (sampleAndHold)
+            object beforeValue = GetValueAtTime(beforeTime);
+            object valueAtStart;
+            if (sampleAndHold || !(beforeValue is float))
             {
                 // for sample and hold, just use (hold) the before value
                 valueAtStart = beforeValue;
@@ -59,9 +100,10 @@ namespace DataSimulator.Api.Helpers
             {
                 DateTime afterTime = beforeTime.AddSeconds(1);
                 float afterValue = (float)GetValueAtTime(afterTime);
+                float beforeAsFloat = (float)beforeValue;
 
                 // calculate value at start based on value/time ratio
-                valueAtStart = beforeValue + (afterTime - startTime).Milliseconds * (afterValue - beforeValue) / 1000;
+                valueAtStart = beforeAsFloat + (afterTime - startTime).Milliseconds * (afterValue - beforeAsFloat) / 1000;
             }
 
             return new VQT(valueAtStart, startTime, new Quality() { HDAQuality = HDAQuality.Interpolated });
