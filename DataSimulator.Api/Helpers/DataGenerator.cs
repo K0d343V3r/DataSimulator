@@ -19,7 +19,9 @@ namespace DataSimulator.Api.Helpers
             if (timePeriod.StartTime.Ticks % TimeSpan.TicksPerSecond == 0)
             {
                 // start time is at whole second, generate Good/Raw value at this time
-                vqts.Add(new VQT(GetValueAtTime(timePeriod.StartTime), timePeriod.StartTime, new Quality()));
+                var value = GetValueAtTime(timePeriod.StartTime);
+                Quality quality = new Quality() { Major = value == null ? MajorQuality.Bad : MajorQuality.Good };
+                vqts.Add(new VQT(value, timePeriod.StartTime, quality));
             }
             else if (initialValue != InitialValue.None || (maxCount > 0 && projectedCount > maxCount))
             {
@@ -51,20 +53,16 @@ namespace DataSimulator.Api.Helpers
 
             while (startTime < timePeriod.EndTime)
             {
-                Quality quality;
-                if (startTime.Ticks % TimeSpan.TicksPerSecond == 0)
+                var value = GetValueAtTime(startTime);
+                Quality quality = new Quality() { Major = value == null ? MajorQuality.Bad : MajorQuality.Good };
+                if (startTime.Ticks % TimeSpan.TicksPerSecond > 0)
                 {
-                    // we happen to be at a whole second, mark this as Good/Raw
-                    quality = new Quality();
-                }
-                else
-                {
-                    // not at a whole second, mark this as Good/Interpolated
-                    quality = new Quality() { HDAQuality = HDAQuality.Interpolated };
+                    // value is not at a second boundary, mark this as Interpolated
+                    quality.HDAQuality = HDAQuality.Interpolated;
                 }
 
                 // add generated value
-                vqts.Add(new VQT(GetValueAtTime(startTime), startTime, quality));
+                vqts.Add(new VQT(value, startTime, quality));
 
                 // and advance to next time
                 startTime = startTime.AddTicks(stepTicks);
@@ -88,40 +86,55 @@ namespace DataSimulator.Api.Helpers
 
         private VQT CreateInterpolatedValue(DateTime startTime, bool sampleAndHold)
         {
+            object value = null;
             DateTime beforeTime = startTime.AddTicks(-(startTime.Ticks % TimeSpan.TicksPerSecond));
             object beforeValue = GetValueAtTime(beforeTime);
-            object valueAtStart;
-            if (sampleAndHold || !(beforeValue is float || beforeValue is double))
+            if (beforeValue != null)
             {
-                // for sample and hold, just use (hold) the before value
-                valueAtStart = beforeValue;
-            }
-            else
-            {
-                DateTime afterTime = beforeTime.AddSeconds(1);
-                double afterValue = Convert.ToDouble(GetValueAtTime(afterTime));
-                double beforeAsDouble = Convert.ToDouble(beforeValue);
-
-                // calculate value at start based on value/time ratio
-                double start = beforeAsDouble + (afterTime - startTime).Milliseconds * (afterValue - beforeAsDouble) / 1000;
-                if (beforeValue is float)
+                if (sampleAndHold || !(beforeValue is float || beforeValue is double))
                 {
-                    valueAtStart = Convert.ToSingle(start);
+                    // for sample and hold, just use (hold) the before value
+                    value = beforeValue;
                 }
                 else
                 {
-                    valueAtStart = start;
+                    DateTime afterTime = beforeTime.AddSeconds(1);
+                    object afterValue = GetValueAtTime(afterTime);
+                    if (afterValue != null)
+                    {
+                        double afterAsDouble = Convert.ToDouble(afterValue);
+                        double beforeAsDouble = Convert.ToDouble(beforeValue);
+
+                        // calculate value at start based on value/time ratio
+                        double start = beforeAsDouble + (afterTime - startTime).Milliseconds * (afterAsDouble - beforeAsDouble) / 1000;
+                        if (beforeValue is float)
+                        {
+                            value = Convert.ToSingle(start);
+                        }
+                        else
+                        {
+                            value = start;
+                        }
+                    }
                 }
             }
 
-            return new VQT(valueAtStart, startTime, new Quality() { HDAQuality = HDAQuality.Interpolated });
+            var quality = new Quality()
+            {
+                Major = value == null ? MajorQuality.Bad : MajorQuality.Good,
+                HDAQuality = HDAQuality.Interpolated
+            };
+
+            return new VQT(value, startTime, quality);
         }
 
         public VQT GetValueAt(DateTime time)
         {
             // align value to second boundary (assumes sample and hold)
             DateTime alignedTime = time.AddTicks(-(time.Ticks % TimeSpan.TicksPerSecond));
-            return new VQT(GetValueAtTime(alignedTime), time, new Quality());
+            var value = GetValueAtTime(alignedTime);
+            var quality = new Quality() { Major = value == null ? MajorQuality.Bad : MajorQuality.Good };
+            return new VQT(value, time, quality);
         }
 
         protected abstract object GetValueAtTime(DateTime time);

@@ -9,7 +9,15 @@ namespace DataSimulator.Api.Helpers
     {
         protected override object GetValueAtTime(DateTime time)
         {
-            return time.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
+            if (time.Ticks % (TimeSpan.TicksPerSecond * 5) == 0)
+            {
+                // generate a value every 5 seconds
+                return time.ToString("o", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
