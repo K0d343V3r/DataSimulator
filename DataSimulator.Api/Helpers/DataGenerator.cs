@@ -91,7 +91,7 @@ namespace DataSimulator.Api.Helpers
             DateTime beforeTime = startTime.AddTicks(-(startTime.Ticks % TimeSpan.TicksPerSecond));
             object beforeValue = GetValueAtTime(beforeTime);
             object valueAtStart;
-            if (sampleAndHold || !(beforeValue is float))
+            if (sampleAndHold || !(beforeValue is float || beforeValue is double))
             {
                 // for sample and hold, just use (hold) the before value
                 valueAtStart = beforeValue;
@@ -99,11 +99,19 @@ namespace DataSimulator.Api.Helpers
             else
             {
                 DateTime afterTime = beforeTime.AddSeconds(1);
-                float afterValue = (float)GetValueAtTime(afterTime);
-                float beforeAsFloat = (float)beforeValue;
+                double afterValue = Convert.ToDouble(GetValueAtTime(afterTime));
+                double beforeAsDouble = Convert.ToDouble(beforeValue);
 
                 // calculate value at start based on value/time ratio
-                valueAtStart = beforeAsFloat + (afterTime - startTime).Milliseconds * (afterValue - beforeAsFloat) / 1000;
+                double start = beforeAsDouble + (afterTime - startTime).Milliseconds * (afterValue - beforeAsDouble) / 1000;
+                if (beforeValue is float)
+                {
+                    valueAtStart = Convert.ToSingle(start);
+                }
+                else
+                {
+                    valueAtStart = start;
+                }
             }
 
             return new VQT(valueAtStart, startTime, new Quality() { HDAQuality = HDAQuality.Interpolated });
