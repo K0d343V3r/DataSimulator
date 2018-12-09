@@ -106,7 +106,9 @@ namespace DataSimulator.Api.Helpers
                         double beforeAsDouble = Convert.ToDouble(beforeValue);
 
                         // calculate value at start based on value/time ratio
-                        double start = beforeAsDouble + (afterTime - startTime).Milliseconds * (afterAsDouble - beforeAsDouble) / 1000;
+                        long timeDifference = (startTime - beforeTime).Ticks;
+                        double valueDifference = afterAsDouble - beforeAsDouble;
+                        double start = beforeAsDouble + timeDifference * valueDifference / TimeSpan.TicksPerSecond;
                         if (beforeValue is float)
                         {
                             value = Convert.ToSingle(start);
