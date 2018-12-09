@@ -18,7 +18,7 @@ namespace DataSimulator.Api.Helpers
                 {
                     Id = TagId.SineWave,
                     Name = "Sine Wave",
-                    Type = TagType.Number,
+                    Type = TagType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "km"
                 },
@@ -26,7 +26,7 @@ namespace DataSimulator.Api.Helpers
                 {
                     Id = TagId.TriangleWave,
                     Name = "Triangle Wave",
-                    Type = TagType.Number,
+                    Type = TagType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "ft/s"
                 },
@@ -34,7 +34,7 @@ namespace DataSimulator.Api.Helpers
                 {
                     Id = TagId.SquareWave,
                     Name = "Square Wave",
-                    Type = TagType.Number,
+                    Type = TagType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "m/s"
                 },
@@ -42,7 +42,7 @@ namespace DataSimulator.Api.Helpers
                 {
                     Id = TagId.SawtoothWave,
                     Name = "Sawtooth Wave",
-                    Type = TagType.Number,
+                    Type = TagType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "m"
                 },
@@ -50,7 +50,7 @@ namespace DataSimulator.Api.Helpers
                 {
                     Id = TagId.WhiteNoise,
                     Name = "White Noise",
-                    Type = TagType.Number,
+                    Type = TagType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "W"
                 },
@@ -58,7 +58,7 @@ namespace DataSimulator.Api.Helpers
                 {
                     Id = TagId.IncrementalCount,
                     Name = "Incremental Count",
-                    Type = TagType.Number,
+                    Type = TagType.Integer,
                     Scale = new NumericScale(0, 1000),
                     EngineeringUnits = "kg"
                 },

@@ -7,7 +7,8 @@ namespace DataSimulator.Api.Models
 {
     public enum TagType
     {
-        Number,
+        Float,
+        Integer,
         Boolean,
         String
     }
