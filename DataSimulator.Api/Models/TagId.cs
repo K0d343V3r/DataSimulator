@@ -15,6 +15,7 @@ namespace DataSimulator.Api.Models
         IncrementalCount,
         PeriodicPulse,
         ModulatedPulse,
-        TimeText
+        TimeText,
+        PDFDocument
     }
 }

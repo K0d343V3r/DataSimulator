@@ -12,14 +12,19 @@ namespace DataSimulator.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DataController : ControllerBase
+    public class TagDataController : ControllerBase
     {
         [HttpPost("history/absolute")]
         [ProducesResponseType(typeof(HistoryResponse), (int)HttpStatusCode.OK)]
-        public ActionResult<HistoryResponse> GetHistoryAbsolute([FromBody] AbsoluteHistoryRequest options)
+        public ActionResult<HistoryResponse> GetHistoryAbsolute([FromBody] AbsoluteHistoryRequest request)
         {
-            TimePeriod timePeriod = new TimePeriod(options.StartTime, options.EndTime);
-            return GetHistory(timePeriod, options as HistoryRequestBase);
+            if (Items.HasContent(request.Tags))
+            {
+                return BadRequest();
+            }
+
+            TimePeriod timePeriod = new TimePeriod(request.StartTime, request.EndTime);
+            return GetHistory(timePeriod, request as HistoryRequestBase);
         }
 
         private HistoryResponse GetHistory(TimePeriod timePeriod, HistoryRequestBase request)
@@ -51,13 +56,13 @@ namespace DataSimulator.Api.Controllers
                 case TagId.TriangleWave:
                 case TagId.WhiteNoise:
                     {
-                        NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
+                        NumericScale scale = ((NumericTag)Items.List.First(t => t.Id == tag)).Scale;
                         return new WaveFormGenerator(GetWaveForm(tag), scale);
                     }
 
                 case TagId.IncrementalCount:
                     {
-                        NumericScale scale = Tags.List.First(t => t.Id == tag).Scale;
+                        NumericScale scale = ((NumericTag)Items.List.First(t => t.Id == tag)).Scale;
                         return new CountGenerator(scale);
                     }
 
@@ -101,6 +106,11 @@ namespace DataSimulator.Api.Controllers
         [ProducesResponseType(typeof(HistoryResponse), (int)HttpStatusCode.OK)]
         public ActionResult<HistoryResponse> GetHistoryRelative([FromBody] RelativeHistoryRequest request)
         {
+            if (Items.HasContent(request.Tags))
+            {
+                return BadRequest();
+            }
+
             TimePeriod timePeriod = request.AnchorTime.HasValue ?
                 new TimePeriod(request.AnchorTime.Value) :
                 new TimePeriod(request.TimeScale, request.OffsetFromNow);
@@ -111,6 +121,11 @@ namespace DataSimulator.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<TagValue>), (int)HttpStatusCode.OK)]
         public ActionResult<IEnumerable<TagValue>> GetValueAtTime([FromBody] ValueAtTimeRequest request)
         {
+            if (Items.HasContent(request.Tags))
+            {
+                return BadRequest();
+            }
+
             return GetValuesAtTime(request.Tags, request.TargetTime);
         }
 
@@ -130,6 +145,11 @@ namespace DataSimulator.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<TagValue>), (int)HttpStatusCode.OK)]
         public ActionResult<IEnumerable<TagValue>> GetLiveValue([FromBody] IEnumerable<TagId> tags)
         {
+            if (Items.HasContent(tags))
+            {
+                return BadRequest();
+            }
+
             return GetValuesAtTime(tags, DateTime.UtcNow);
         }
     }

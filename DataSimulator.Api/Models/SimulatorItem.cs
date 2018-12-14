@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 namespace DataSimulator.Api.Models
 {
     [JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
-    [KnownType(typeof(NumericTag))]
-    [KnownType(typeof(BooleanTag))]
-    [KnownType(typeof(StringTag))]
-    public abstract class SimulatorTag : SimulatorItem
+    [KnownType(typeof(SimulatorTag))]
+    [KnownType(typeof(SimulatorDocument))]
+    public abstract class SimulatorItem
     {
+        public TagId Id { get; set; }
+        public string Name { get; set; }
     }
 }

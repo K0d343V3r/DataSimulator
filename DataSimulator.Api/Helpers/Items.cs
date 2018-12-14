@@ -6,87 +6,100 @@ using System.Threading.Tasks;
 
 namespace DataSimulator.Api.Helpers
 {
-    public static class Tags
+    public static class Items
     {
-        public static readonly IEnumerable<SimulatorTag> List;
+        public static readonly IEnumerable<SimulatorItem> List;
 
-        static Tags()
+        static Items()
         {
-            List<SimulatorTag> tags = new List<SimulatorTag>
+            List<SimulatorItem> items = new List<SimulatorItem>
             {
-                new SimulatorTag()
+                new NumericTag()
                 {
                     Id = TagId.SineWave,
                     Name = "Sine Wave",
-                    Type = TagType.Float,
+                    Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "km"
                 },
-                new SimulatorTag()
+                new NumericTag()
                 {
                     Id = TagId.TriangleWave,
                     Name = "Triangle Wave",
-                    Type = TagType.Float,
+                    Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "ft/s"
                 },
-                new SimulatorTag()
+                new NumericTag()
                 {
                     Id = TagId.SquareWave,
                     Name = "Square Wave",
-                    Type = TagType.Float,
+                    Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "m/s"
                 },
-                new SimulatorTag()
+                new NumericTag()
                 {
                     Id = TagId.SawtoothWave,
                     Name = "Sawtooth Wave",
-                    Type = TagType.Float,
+                    Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "m"
                 },
-                new SimulatorTag()
+                new NumericTag()
                 {
                     Id = TagId.WhiteNoise,
                     Name = "White Noise",
-                    Type = TagType.Float,
+                    Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
                     EngineeringUnits = "W"
                 },
-                new SimulatorTag()
+                new NumericTag()
                 {
                     Id = TagId.IncrementalCount,
                     Name = "Incremental Count",
-                    Type = TagType.Integer,
+                    Type = NumericType.Integer,
                     Scale = new NumericScale(0, 1000),
                     EngineeringUnits = "kg"
                 },
-                new SimulatorTag()
+                new BooleanTag()
                 {
                     Id = TagId.PeriodicPulse,
                     Name = "Periodic Pulse",
-                    Type = TagType.Boolean,
                     TrueLabel = "On",
                     FalseLabel = "Off"
                 },
-                new SimulatorTag()
+                new BooleanTag()
                 {
                     Id = TagId.ModulatedPulse,
                     Name = "Modulated Pulse",
-                    Type = TagType.Boolean,
                     TrueLabel = "Open",
                     FalseLabel = "Closed"
                 },
-                new SimulatorTag()
+                new StringTag()
                 {
                     Id = TagId.TimeText,
                     Name = "Time Text",
-                    Type = TagType.String
+                },
+                new SimulatorDocument()
+                {
+                    Id = TagId.PDFDocument,
+                    Name = "PDF Document",
+                    MediaType = "application/pdf"
                 }
             };
 
-            List = tags;
+            List = items;
+        }
+
+        public static bool HasContent(IEnumerable<TagId> items)
+        {
+            return items.All(i => i == TagId.PDFDocument);
+        }
+
+        public static bool HasTags(IEnumerable<TagId> items)
+        {
+            return items.All(i => i != TagId.PDFDocument);
         }
     }
 }
