@@ -13,7 +13,7 @@ namespace DataSimulator.Api.Models
     [KnownType(typeof(SimulatorDocument))]
     public abstract class SimulatorItem
     {
-        public TagId Id { get; set; }
+        public ItemId Id { get; set; }
         public string Name { get; set; }
     }
 }

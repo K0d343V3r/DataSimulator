@@ -22,7 +22,7 @@ namespace DataSimulator.Api.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(SimulatorItem), (int)HttpStatusCode.OK)]
-        public ActionResult<SimulatorItem> GetItem(TagId id)
+        public ActionResult<SimulatorItem> GetItem(ItemId id)
         {
             return Items.List.FirstOrDefault(t => t.Id == id);
         }

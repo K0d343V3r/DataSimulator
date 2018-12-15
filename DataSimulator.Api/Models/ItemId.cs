@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DataSimulator.Api.Models
 {
-    public enum TagId
+    public enum ItemId
     {
         SineWave,
         TriangleWave,

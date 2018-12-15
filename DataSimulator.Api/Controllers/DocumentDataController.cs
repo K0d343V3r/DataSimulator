@@ -16,7 +16,7 @@ namespace DataSimulator.Api.Controllers
     {
         [HttpPost]
         [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
-        public ActionResult<IEnumerable<string>> GetDocuments([FromBody] IEnumerable<TagId> documents)
+        public ActionResult<IEnumerable<string>> GetDocuments([FromBody] IEnumerable<ItemId> documents)
         {
             if (Items.HasTags(documents))
             {

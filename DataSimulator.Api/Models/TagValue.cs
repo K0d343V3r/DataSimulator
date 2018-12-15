@@ -7,7 +7,7 @@ namespace DataSimulator.Api.Models
 {
     public class TagValue
     {
-        public TagId Tag { get; set; }
+        public ItemId Tag { get; set; }
         public VQT Value { get; set; }
     }
 }

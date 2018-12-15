@@ -46,31 +46,31 @@ namespace DataSimulator.Api.Controllers
             };
         }
 
-        private DataGenerator CreateGenerator(TagId tag)
+        private DataGenerator CreateGenerator(ItemId tag)
         {
             switch (tag)
             {
-                case TagId.SawtoothWave:
-                case TagId.SineWave:
-                case TagId.SquareWave:
-                case TagId.TriangleWave:
-                case TagId.WhiteNoise:
+                case ItemId.SawtoothWave:
+                case ItemId.SineWave:
+                case ItemId.SquareWave:
+                case ItemId.TriangleWave:
+                case ItemId.WhiteNoise:
                     {
                         NumericScale scale = ((NumericTag)Items.List.First(t => t.Id == tag)).Scale;
                         return new WaveFormGenerator(GetWaveForm(tag), scale);
                     }
 
-                case TagId.IncrementalCount:
+                case ItemId.IncrementalCount:
                     {
                         NumericScale scale = ((NumericTag)Items.List.First(t => t.Id == tag)).Scale;
                         return new CountGenerator(scale);
                     }
 
-                case TagId.ModulatedPulse:
-                case TagId.PeriodicPulse:
-                    return new DiscreteGenerator(tag == TagId.PeriodicPulse);
+                case ItemId.ModulatedPulse:
+                case ItemId.PeriodicPulse:
+                    return new DiscreteGenerator(tag == ItemId.PeriodicPulse);
 
-                case TagId.TimeText:
+                case ItemId.TimeText:
                     return new TextGenerator();
 
                 default:
@@ -78,23 +78,23 @@ namespace DataSimulator.Api.Controllers
             }
         }
 
-        private WaveForm GetWaveForm(TagId id)
+        private WaveForm GetWaveForm(ItemId id)
         {
             switch (id)
             {
-                case TagId.SawtoothWave:
+                case ItemId.SawtoothWave:
                     return WaveForm.Sawtooth;
 
-                case TagId.SineWave:
+                case ItemId.SineWave:
                     return WaveForm.Sine;
 
-                case TagId.SquareWave:
+                case ItemId.SquareWave:
                     return WaveForm.Square;
 
-                case TagId.TriangleWave:
+                case ItemId.TriangleWave:
                     return WaveForm.Triangle;
 
-                case TagId.WhiteNoise:
+                case ItemId.WhiteNoise:
                     return WaveForm.WhiteNoise;
 
                 default:
@@ -129,7 +129,7 @@ namespace DataSimulator.Api.Controllers
             return GetValuesAtTime(request.Tags, request.TargetTime);
         }
 
-        private List<TagValue> GetValuesAtTime(IEnumerable<TagId> tags, DateTime targetTime)
+        private List<TagValue> GetValuesAtTime(IEnumerable<ItemId> tags, DateTime targetTime)
         {
             List<TagValue> values = new List<TagValue>();
             foreach (var tag in tags)
@@ -143,7 +143,7 @@ namespace DataSimulator.Api.Controllers
 
         [HttpPost("livevalue")]
         [ProducesResponseType(typeof(IEnumerable<TagValue>), (int)HttpStatusCode.OK)]
-        public ActionResult<IEnumerable<TagValue>> GetLiveValue([FromBody] IEnumerable<TagId> tags)
+        public ActionResult<IEnumerable<TagValue>> GetLiveValue([FromBody] IEnumerable<ItemId> tags)
         {
             if (Items.HasContent(tags))
             {

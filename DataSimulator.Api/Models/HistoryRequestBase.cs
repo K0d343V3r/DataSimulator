@@ -7,7 +7,7 @@ namespace DataSimulator.Api.Models
 {
     public abstract class HistoryRequestBase
     {
-        public IEnumerable<TagId> Tags { get; set; }
+        public IEnumerable<ItemId> Tags { get; set; }
         public InitialValue InitialValue { get; set; }
         public int MaxCount { get; set; }
     }

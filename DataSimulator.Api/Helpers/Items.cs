@@ -16,7 +16,7 @@ namespace DataSimulator.Api.Helpers
             {
                 new NumericTag()
                 {
-                    Id = TagId.SineWave,
+                    Id = ItemId.SineWave,
                     Name = "Sine Wave",
                     Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
@@ -24,7 +24,7 @@ namespace DataSimulator.Api.Helpers
                 },
                 new NumericTag()
                 {
-                    Id = TagId.TriangleWave,
+                    Id = ItemId.TriangleWave,
                     Name = "Triangle Wave",
                     Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
@@ -32,7 +32,7 @@ namespace DataSimulator.Api.Helpers
                 },
                 new NumericTag()
                 {
-                    Id = TagId.SquareWave,
+                    Id = ItemId.SquareWave,
                     Name = "Square Wave",
                     Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
@@ -40,7 +40,7 @@ namespace DataSimulator.Api.Helpers
                 },
                 new NumericTag()
                 {
-                    Id = TagId.SawtoothWave,
+                    Id = ItemId.SawtoothWave,
                     Name = "Sawtooth Wave",
                     Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
@@ -48,7 +48,7 @@ namespace DataSimulator.Api.Helpers
                 },
                 new NumericTag()
                 {
-                    Id = TagId.WhiteNoise,
+                    Id = ItemId.WhiteNoise,
                     Name = "White Noise",
                     Type = NumericType.Float,
                     Scale = new NumericScale(0, 100),
@@ -56,7 +56,7 @@ namespace DataSimulator.Api.Helpers
                 },
                 new NumericTag()
                 {
-                    Id = TagId.IncrementalCount,
+                    Id = ItemId.IncrementalCount,
                     Name = "Incremental Count",
                     Type = NumericType.Integer,
                     Scale = new NumericScale(0, 1000),
@@ -64,26 +64,26 @@ namespace DataSimulator.Api.Helpers
                 },
                 new BooleanTag()
                 {
-                    Id = TagId.PeriodicPulse,
+                    Id = ItemId.PeriodicPulse,
                     Name = "Periodic Pulse",
                     TrueLabel = "On",
                     FalseLabel = "Off"
                 },
                 new BooleanTag()
                 {
-                    Id = TagId.ModulatedPulse,
+                    Id = ItemId.ModulatedPulse,
                     Name = "Modulated Pulse",
                     TrueLabel = "Open",
                     FalseLabel = "Closed"
                 },
                 new StringTag()
                 {
-                    Id = TagId.TimeText,
+                    Id = ItemId.TimeText,
                     Name = "Time Text",
                 },
                 new SimulatorDocument()
                 {
-                    Id = TagId.PDFDocument,
+                    Id = ItemId.PDFDocument,
                     Name = "PDF Document",
                     MediaType = "application/pdf"
                 }
@@ -92,14 +92,14 @@ namespace DataSimulator.Api.Helpers
             List = items;
         }
 
-        public static bool HasContent(IEnumerable<TagId> items)
+        public static bool HasContent(IEnumerable<ItemId> items)
         {
-            return items.All(i => i == TagId.PDFDocument);
+            return items.All(i => i == ItemId.PDFDocument);
         }
 
-        public static bool HasTags(IEnumerable<TagId> items)
+        public static bool HasTags(IEnumerable<ItemId> items)
         {
-            return items.All(i => i != TagId.PDFDocument);
+            return items.All(i => i != ItemId.PDFDocument);
         }
     }
 }

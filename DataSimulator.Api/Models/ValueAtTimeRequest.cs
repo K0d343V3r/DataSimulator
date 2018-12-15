@@ -7,7 +7,7 @@ namespace DataSimulator.Api.Models
 {
     public class ValueAtTimeRequest
     {
-        public IEnumerable<TagId> Tags { get; set; }
+        public IEnumerable<ItemId> Tags { get; set; }
         public DateTime TargetTime { get; set; }
     }
 }
