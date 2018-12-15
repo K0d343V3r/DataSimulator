@@ -15,15 +15,19 @@ namespace DataSimulator.Api.Controllers
     public class DocumentDataController : ControllerBase
     {
         [HttpPost]
-        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
-        public ActionResult<IEnumerable<string>> GetDocuments([FromBody] IEnumerable<ItemId> documents)
+        [ProducesResponseType(typeof(IEnumerable<DocumentValue>), (int)HttpStatusCode.OK)]
+        public ActionResult<IEnumerable<DocumentValue>> GetDocumentValues([FromBody] IEnumerable<ItemId> documents)
         {
             if (Items.HasTags(documents))
             {
                 return BadRequest();
             }
 
-            return documents.Select(i => "http://infolab.stanford.edu/pub/papers/google.pdf").ToList();
+            return documents.Select(i => new DocumentValue()
+            {
+                Document = i,
+                Url = "http://infolab.stanford.edu/pub/papers/google.pdf"
+            }).ToList();
         }
     }
 }
