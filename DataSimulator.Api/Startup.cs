@@ -31,7 +31,7 @@ namespace DataSimulator.Api
             services.AddCors();
 
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
                 {
                     // work with UTC dates
