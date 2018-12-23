@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataSimulator.Api.Helpers
+namespace DataSimulator.Api.Services.DataGenerator
 {
     public abstract class DataGenerator
     {

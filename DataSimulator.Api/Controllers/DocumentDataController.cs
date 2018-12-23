@@ -1,12 +1,9 @@
-﻿using System;
+﻿using DataSimulator.Api.Models;
+using DataSimulator.Api.Services.SimulatorItems;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using DataSimulator.Api.Helpers;
-using DataSimulator.Api.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DataSimulator.Api.Controllers
 {
@@ -14,20 +11,29 @@ namespace DataSimulator.Api.Controllers
     [ApiController]
     public class DocumentDataController : ControllerBase
     {
+        private readonly ISimulatorItemsService _simulatorItemsService;
+
+        public DocumentDataController(ISimulatorItemsService simulatorItemsService)
+        {
+            _simulatorItemsService = simulatorItemsService;
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(IEnumerable<DocumentValue>), (int)HttpStatusCode.OK)]
         public ActionResult<IEnumerable<DocumentValue>> GetDocumentValues([FromBody] IEnumerable<ItemId> documents)
         {
-            if (Items.HasTags(documents))
+            if (_simulatorItemsService.HasTagItems(documents))
             {
                 return BadRequest();
             }
-
-            return documents.Select(i => new DocumentValue()
+            else
             {
-                Document = i,
-                Url = "http://infolab.stanford.edu/pub/papers/google.pdf"
-            }).ToList();
+                return documents.Select(i => new DocumentValue()
+                {
+                    Document = i,
+                    Url = "http://infolab.stanford.edu/pub/papers/google.pdf"
+                }).ToList();
+            }
         }
     }
 }

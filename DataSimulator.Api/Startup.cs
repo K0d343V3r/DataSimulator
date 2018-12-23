@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using DataSimulator.Api.Services.DataGenerator;
+using DataSimulator.Api.Services.SimulatorItems;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +39,10 @@ namespace DataSimulator.Api
                     // work with UTC dates
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 });
+
+            // add dependency injected services
+            services.AddSingleton<IDataGeneratorService, DataGeneratorService>();
+            services.AddSingleton<ISimulatorItemsService, SimulatorItemsService>();
 
             // Add OpenAPI/Swagger document
             services.AddSwaggerDocument(); // registers a Swagger v2.0 document with the name "v1" (default)
