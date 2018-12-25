@@ -41,8 +41,8 @@ namespace DataSimulator.Api
                 });
 
             // add dependency injected services
-            services.AddSingleton<IDataGeneratorService, DataGeneratorService>();
-            services.AddSingleton<ISimulatorItemsService, SimulatorItemsService>();
+            services.AddTransient<IDataGeneratorService, DataGeneratorService>();
+            services.AddTransient<ISimulatorItemsService, SimulatorItemsService>();
 
             // Add OpenAPI/Swagger document
             services.AddSwaggerDocument(); // registers a Swagger v2.0 document with the name "v1" (default)
